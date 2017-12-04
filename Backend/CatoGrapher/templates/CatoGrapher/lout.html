@@ -1,0 +1,10 @@
+{% load static %}
+
+{% block content %}
+  <form method="post" action="/CatoGrapher/exit/">
+    {% csrf_token %}
+    <button type="submit">Выйти</button>
+  </form>
+
+  <p><a href="{% url 'CatoGrapher:ura' %}">Return to home</a></p>
+{% endblock %}

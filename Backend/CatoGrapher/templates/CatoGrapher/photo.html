@@ -1,0 +1,63 @@
+{% extends 'CatoGrapher/base.html' %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{% load static %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+
+{% block content %}
+      <script type="text/javascript">
+          submitForms = function(){
+              document.getElementById("form").submit();
+              }
+      </script>
+<div class="elem">
+    <p>image:</p>
+    <img height="150" width=auto src="{{ image_id }}">
+    <br>
+    <label>id:</label>
+    <h2>{{ id }}</h2>
+    <label>nickname:</label>
+    <h2>{{ created_by }}</h2>
+    <label>date:</label>
+    <h2>{{ created_at }}</h2>
+</div>
+<div class="elem">
+    <h1> Нравится: {{ l_num }}</h1>
+</div>
+  <form action="{% url 'CatoGrapher:makelike' id %}" method="get">
+    <button>Мне нравится</button>
+  </form>
+
+  <form action="{% url 'CatoGrapher:dele' id %}" method="get">
+    <button>Удалить запись !</button>
+  </form>
+
+    <h1>Комментарии:</h1>
+
+{% for comm in comments %}
+<div class="elem">
+    <h3>{{ comm.sender_id.nickname_user }}</h3>
+    <h3>{{ comm.text }}</h3>
+    <br>
+    <br>
+</div>
+{% endfor %}
+<div class="elem">
+<form enctype="multipart/form-data" novalidate="" action=""  method="post" id = "form" class="form">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  {% buttons %}
+  <button type="button" class="btn btn-primary" onclick="submitForms()">
+    {% bootstrap_icon "star" %} Отправить
+  </button>
+  {% endbuttons %}
+</form>
+</div>
+  <p><a href="{% url 'CatoGrapher:home' %}">Return to home</a></p>
+{% endblock %}

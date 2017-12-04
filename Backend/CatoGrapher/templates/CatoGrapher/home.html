@@ -1,0 +1,30 @@
+{# Load the tag library #}
+{% extends 'CatoGrapher/base.html' %}
+
+{% load bootstrap3 %}
+{% load static %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block title %}Лента новостей:{% endblock %}
+
+{% block content %}
+
+{% for im in images %}
+    <div class="elem">
+        <img width="300" height=auto src="{{ im.image_id.url }}">
+        <li><a href="{% url 'CatoGrapher:photo' im.id %}">{{ im.description }}</a></li>
+        <p> {{ im.created_at }} </p>
+        <br>
+        <br>
+    </div>
+
+{% endfor %}
+
+
+  <p><a href="{% url 'CatoGrapher:ura' %}">Return to home</a></p>
+{% endblock %}
