@@ -19,5 +19,7 @@ urlpatterns = [
     url(r'^exit/', views.log_out, name='exit'),
     url(r'^uspeh/', views.uspeh, name='ura'),
     url(r'^ang/',views.angular, name='ang'),
+    url(r'^ang123/',views.angular_post, name='ang'),
+
 
 ]

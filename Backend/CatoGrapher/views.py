@@ -150,3 +150,21 @@ def angular(request):
     user=CustomUser.objects.get(email='nik@yandex.ru')
     print(user.avatar.url.__str__())
     return Response({'href':user.avatar.url},status=200)
+
+import base64
+import re
+from PIL import Image
+from io import StringIO
+
+
+@api_view(['POST'])
+def angular_post(request):
+    user=CustomUser.objects.get(email='nik@yandex.ru')
+    print(user.avatar.url.__str__())
+    #im = Image.open(StringIO(request.FILES['upload'].read()))
+    print(request.FILES['upload'])
+    picture = request.FILES['upload']
+    img = Image.open(picture)
+    img.show()
+
+    return Response({'href':user.avatar.url},status=200)

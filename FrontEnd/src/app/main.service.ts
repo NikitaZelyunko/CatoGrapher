@@ -10,5 +10,8 @@ export class MainService {
 
   public get(url: string): Observable<any> {
     return this.httpClient.get(url, {responseType: 'json'});
+  }
+  public post(url: string): Observable<any> {
+    return this.httpClient.post(url, {responseType: 'json'});
 }
 }
