@@ -4,6 +4,7 @@ import { NgForm} from '@angular/forms';
 import { NgModel } from '@angular/forms';
 import { } from 'ng-file-upload';
 import { UploadImageService } from './upload-image.service';
+import { RegisterService } from './register.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,16 @@ import { UploadImageService } from './upload-image.service';
 })
 
 export class AppComponent  {
-  constructor(private uploadImageService: UploadImageService) {}
+  img: any;
+  form: any = {};
+  file: File;
+  constructor(
+    private uploadImageService: UploadImageService,
+    private registerService: RegisterService
+  ) {
+    this.form = {
+  };
+  }
 
   fileChange(event): void {
   const fileList: FileList = event.target.files;
@@ -23,4 +33,33 @@ export class AppComponent  {
           .subscribe();
       }
   }
+
+  addPhoto(event): void {
+    let target = event.target || event.srcElement;
+    let reader = new FileReader();
+    reader.onload = _ => {
+      this.img = reader.result;
+    };
+    this.file = target.files[0];
+    reader.readAsDataURL(this.file);
+  }
+  submit_register() {
+    let final_data;
+
+    if (this.file) {
+        let file: File = this.file;
+        const formData = new FormData();
+            formData.append('file', file);
+            formData.append('data', JSON.stringify(this.form));
+            final_data = formData;
+        }
+    else {
+        //Если нет файла, то слать как обычный JSON
+        final_data = this.form;
+    }
+
+    this.registerService.register(final_data)
+    .subscribe(resp => {
+    });
+}
 }

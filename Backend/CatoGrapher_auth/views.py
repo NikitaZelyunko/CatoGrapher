@@ -7,20 +7,25 @@ from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 
 from django.contrib import auth
+import json
 
 
 # Create your views here.
 @api_view(['POST'])
 def register(request):
-    email = request.data['email']
-    nickname=request.data['nickname']
+    print("hello")
+    data=json.loads(request.POST['data'])
+    email=data['email']
+    nickname=data['nickname']
+    password=data['password']
+    avatar=request.FILES['file']
     if CustomUser.objects.filter(email__iexact=email).exists():
         return Response({'c': 'error', 'd': 'exist'}, status=400)
     serializer = CustomUserSerializer(data=request.data, partial=True)
     if serializer.is_valid():
         from django.contrib.auth.hashers import make_password
-        serializer.save(email=email, nickname=nickname, password=make_password(request.data['password']))
-        user = CustomUser.objects.get(email=request.data['email'], nickname=nickname)
+        serializer.save(email=email, nickname=nickname, password=make_password(password))
+        user = CustomUser.objects.get(email=email, nickname=nickname)
         return Response({'status': 'success'}, status=201)
     else:
         return Response({'c': 'error', 'd': 'data is not valid'}, status=400)

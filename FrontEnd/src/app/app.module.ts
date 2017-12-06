@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MainService } from './main.service';
+import { RegisterService } from './register.service';
 import { UploadImageService } from './upload-image.service';
 import { HttpClientModule} from '@angular/common/http';
 
@@ -23,6 +24,7 @@ import { FileModelDirective } from './file-model.directive';
   providers: [
     MainService,
     UploadImageService,
+    RegisterService,
   ],
   bootstrap: [AppComponent]
 })

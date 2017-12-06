@@ -1,1 +1,11 @@
-<input type="file" (change)="fileChange($event)" name="file">
+<input type="file" (change)="addPhoto($event)" name="file">
+
+<form name="form" (ngSubmit)="f.form.valid && submit_register()" #f="ngForm" novalidate>
+    <input type="text" placeholder="email" name="email" [(ngModel)]="form.email" #email="ngModel" />
+    <input type="text" placeholder="nickname" name="nickname" [(ngModel)]="form.nickname" #nickname="ngModel" />
+    <input type="text" placeholder="password" name="password" [(ngModel)]="form.password" #password="ngModel" />
+    <input type="file" name="avatar" (change)="addPhoto($event)" />
+    <button type="submit">Отправить</button>
+</form>
+
+<img src={{img}}>
