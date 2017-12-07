@@ -1,12 +1,1 @@
-<form name="form" (ngSubmit)="f.form.valid && submit_register()" #f="ngForm">
-    <input type="email" placeholder="email" name="email" [(ngModel)]="form.email" #email="ngModel" required pattern="\S+@[a-z]+.[a-z]+" required />
-    <input type="text" placeholder="nickname" name="nickname" [(ngModel)]="form.nickname" #nickname="ngModel" />
-    <input type="password" placeholder="password" name="password" [(ngModel)]="form.password" #password="ngModel" />
-    <input type="file" name="avatar" accept="image/*" (change)="addPhoto($event)" />
-    <button type="submit">Отправить</button>
-</form>
-
-<div *ngIf="img_is_set">
-    <p>preview:</p>
-    <img src={{img}} width="200px">
-</div>
+<router-outlet></router-outlet>

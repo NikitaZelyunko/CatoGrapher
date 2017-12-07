@@ -1,0 +1,25 @@
+<form name="form" class="register_form" (ngSubmit)="f.form.valid && submit_register()" #f="ngForm">
+    <div class="img_cat">
+        <img src='../../assets/img/register_background.jpg'>
+    </div>
+    <div class="block_register">
+        <div class="input_block">
+            <input type="email" placeholder="email" name="email" [(ngModel)]="form.email" #email="ngModel" required pattern="\S+@[a-z]+.[a-z]+" required />
+        </div>
+        <div class="input_block">
+            <input type="text" placeholder="nickname" name="nickname" [(ngModel)]="form.nickname" #nickname="ngModel" required />
+        </div>
+        <div class="input_block">
+            <input type="password" placeholder="password" name="password" [(ngModel)]="form.password" #password="ngModel" required/>
+        </div>
+        <div class="input_block">
+            <input type="file" name="avatar" accept="image/*" (change)="addPhoto($event)" />
+        </div>
+        <button type="submit">Отправить</button>
+    </div>
+</form>
+
+<div *ngIf="img_is_set">
+    <p>preview:</p>
+    <img src={{img}} width="200px">
+</div>

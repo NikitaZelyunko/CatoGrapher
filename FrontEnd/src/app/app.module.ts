@@ -9,17 +9,21 @@ import { HttpClientModule} from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { FileModelDirective } from './file-model.directive';
+import { AppRoutingModule } from './/app-routing.module';
+import { RegistrationComponent } from './registration/registration.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    FileModelDirective
+    FileModelDirective,
+    RegistrationComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    AppRoutingModule
   ],
   providers: [
     MainService,
