@@ -4,6 +4,9 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy
 from django.core.mail import send_mail
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+import os
+
+allowed_extencion=['jpeg','png','gif','ico','jpg']
 
 
 
@@ -11,20 +14,28 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 class CustomUserManager(BaseUserManager):
     use_in_migrations = True
 
-    def _create_user(self, email, nickname, password, **extra_fields):
+    def _create_user(self, email, nickname, password, avatar, **extra_fields):
         if not email:
             raise ValueError('The given email must be set')
         email = self.normalize_email(email)
+        if not nickname:
+            raise ValueError('The given nickname must be set')
         nickname = nickname
-        user = self.model(email=email, nickname=nickname, **extra_fields)
+        if(avatar):
+            extencion_avatar=avatar.name.split('.')[1]
+            if(not allowed_extencion.__contains__(extencion_avatar)):
+                print('The extencion of "avatar" is not supported')
+
+                raise ValueError('The extencion of "avatar" is not supported')
+        user = self.model(email=email, nickname=nickname, avatar=avatar, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_user(self, email=None, password=None, nickname=None, **extra_fields):
+    def create_user(self, email=None, password=None, nickname=None, avatar=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(email, password, nickname, **extra_fields)
+        return self._create_user(email, password, nickname, avatar, **extra_fields)
 
     def create_superuser(self, email, password, nickname, **extra_fields):
         extra_fields.setdefault('is_staff', True)
@@ -35,7 +46,7 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self._create_user(email, password, nickname, **extra_fields)
+        return self._create_user(email, password, nickname, None, **extra_fields)
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -43,7 +54,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     nickname = models.CharField(max_length=100, unique=True)
     first_name = models.CharField(('first_name'), max_length=30, blank=True)
     last_name = models.CharField(('last_name'), max_length=30, blank=True)
-    avatar = models.ImageField(blank=True, upload_to="CatoGrapher/avatars")
+    avatar = models.ImageField(blank=False, upload_to="CatoGrapher/avatars", default="CatoGrapher/avatars/default.png")
     is_staff = models.BooleanField(
         ('staff_status'),
         default=False,

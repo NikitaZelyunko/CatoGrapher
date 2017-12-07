@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { MainService} from './main.service';
 import { NgForm} from '@angular/forms';
 import { NgModel } from '@angular/forms';
-import { } from 'ng-file-upload';
 import { UploadImageService } from './upload-image.service';
 import { RegisterService } from './register.service';
+import { error } from 'util';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +16,8 @@ export class AppComponent  {
   img: any;
   form: any = {};
   file: File;
+  data: any= {};
+  error: any= {};
   constructor(
     private uploadImageService: UploadImageService,
     private registerService: RegisterService
@@ -45,21 +47,29 @@ export class AppComponent  {
   }
   submit_register() {
     let final_data;
+    const formData = new FormData();
 
     if (this.file) {
         let file: File = this.file;
-        const formData = new FormData();
+
             formData.append('file', file);
-            formData.append('data', JSON.stringify(this.form));
-            final_data = formData;
         }
-    else {
-        //Если нет файла, то слать как обычный JSON
-        final_data = this.form;
-    }
+
+    formData.append('data', JSON.stringify(this.form));
+    final_data = formData;
 
     this.registerService.register(final_data)
-    .subscribe(resp => {
-    });
-}
+    .subscribe(
+      data => {
+        this.data = data;
+        console.log(data);
+      },
+      err => {
+        if (err) {
+          this.error = err;
+          console.log('Something went wrong!', err);
+        }
+      }
+      );
+    }
 }

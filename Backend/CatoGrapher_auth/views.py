@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 
 from django.contrib import auth
+from django.utils.datastructures import MultiValueDictKeyError
 import json
 
 
@@ -14,18 +15,33 @@ import json
 @api_view(['POST'])
 def register(request):
     print("hello")
-    data=json.loads(request.POST['data'])
-    email=data['email']
-    nickname=data['nickname']
-    password=data['password']
-    avatar=request.FILES['file']
+    try:
+        data=json.loads(request.POST['data'])
+        email=data['email']
+        nickname=data['nickname']
+        password=data['password']
+    except MultiValueDictKeyError:
+        return Response({'c':'error', 'd':'bad request'},status=400)
+
+    try:
+        avatar=request.FILES['file']
+    except MultiValueDictKeyError :
+        avatar=0
+
     if CustomUser.objects.filter(email__iexact=email).exists():
         return Response({'c': 'error', 'd': 'exist'}, status=400)
-    serializer = CustomUserSerializer(data=request.data, partial=True)
+    serializer = CustomUserSerializer(data=data, partial=True)
     if serializer.is_valid():
         from django.contrib.auth.hashers import make_password
-        serializer.save(email=email, nickname=nickname, password=make_password(password))
-        user = CustomUser.objects.get(email=email, nickname=nickname)
+        if avatar:
+            try:
+                CustomUser.objects.create_user(email=email, nickname=nickname, password=make_password(password), avatar=avatar)
+            except ValueError as error:
+                return Response({'c':'error','d':error.__str__()},status=400)
+        else:
+            CustomUser.objects.create_user(email=email, nickname=nickname, password=make_password(password))
+        user = CustomUser.objects.get(email=email)
+        print(user)
         return Response({'status': 'success'}, status=201)
     else:
         return Response({'c': 'error', 'd': 'data is not valid'}, status=400)
