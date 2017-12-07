@@ -6,16 +6,20 @@ import { UploadImageService } from './upload-image.service';
 import { RegisterService } from './register.service';
 import { error } from 'util';
 
+const allowed_extension = ['jpg', 'jpeg', 'png', 'ico', 'gif'];
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 
+
 export class AppComponent  {
   img: any;
   form: any = {};
   file: File;
+  img_is_set= false;
   data: any= {};
   error: any= {};
   constructor(
@@ -26,50 +30,81 @@ export class AppComponent  {
   };
   }
 
-  fileChange(event): void {
-  const fileList: FileList = event.target.files;
-  if (fileList.length > 0) {
-          const file = fileList[0];
-          const url = 'http://127.0.0.1:8000/CatoGrapher/ang123/';
-          this.uploadImageService.uploadFile(url, file)
-          .subscribe();
-      }
-  }
-
   addPhoto(event): void {
     let target = event.target || event.srcElement;
-    let reader = new FileReader();
-    reader.onload = _ => {
-      this.img = reader.result;
-    };
-    this.file = target.files[0];
-    reader.readAsDataURL(this.file);
+    //console.log(target.files[0].name);
+    if (allowed_extension.indexOf(target.files[0].name.split('.')[1], 0) !== -1) {
+      let reader = new FileReader();
+      reader.onload = _ => {
+        this.img = reader.result;
+        this.img_is_set = true;
+      };
+      this.file = target.files[0];
+      reader.readAsDataURL(this.file);
+    }
+    else {
+      this.img = null;
+      this.img_is_set = false;
+    }
+
+  }
+
+  form_valid(): boolean {
+
+    if (!this.form['email'])
+    {
+      alert('set email');
+      return false;
+    }
+    /*
+    let email_without_dog=this.form['email'].split('@');
+    if(email_without_dog.length)
+    {
+      alert('set correct email');
+      return false;
+    }
+    */
+    if (!this.form['nickname'])
+    {
+      alert('set nickname');
+      return false;
+    }
+
+    if (!this.form['password'])
+    {
+      alert('set password');
+      return false;
+    }
+    return true;
   }
   submit_register() {
     let final_data;
     const formData = new FormData();
-
-    if (this.file) {
+    if (this.img_is_set) {
+      console.log(this.file.name);
+      if (allowed_extension.indexOf(this.file.name.split('.')[1], 0) !== -1) {
         let file: File = this.file;
-
-            formData.append('file', file);
-        }
-
-    formData.append('data', JSON.stringify(this.form));
-    final_data = formData;
-
-    this.registerService.register(final_data)
-    .subscribe(
-      data => {
-        this.data = data;
-        console.log(data);
-      },
-      err => {
-        if (err) {
-          this.error = err;
-          console.log('Something went wrong!', err);
-        }
+        formData.append('avatar', file);
       }
-      );
+      formData.append('data', JSON.stringify(this.form));
+      final_data = formData;
+
+      this.registerService.register(final_data)
+      .subscribe(
+        data => {
+          this.data = data;
+          console.log(data);
+        },
+        err => {
+          if (err) {
+            this.error = err;
+            console.log('Something went wrong!', err);
+          }
+        }
+        );
     }
+    else {
+      alert('file extension is not support');
+    }
+  }
 }

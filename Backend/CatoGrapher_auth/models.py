@@ -21,12 +21,12 @@ class CustomUserManager(BaseUserManager):
         if not nickname:
             raise ValueError('The given nickname must be set')
         nickname = nickname
-        if(avatar):
-            extencion_avatar=avatar.name.split('.')[1]
-            if(not allowed_extencion.__contains__(extencion_avatar)):
-                print('The extencion of "avatar" is not supported')
-
-                raise ValueError('The extencion of "avatar" is not supported')
+        # if(avatar):
+        #     extencion_avatar=avatar.name.split('.')[1]
+        #     if(not allowed_extencion.__contains__(extencion_avatar)):
+        #         print('The extencion of "avatar" is not supported')
+        #
+        #         raise ValueError('The extencion of "avatar" is not supported')
         user = self.model(email=email, nickname=nickname, avatar=avatar, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
@@ -72,6 +72,19 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = ('users')
         swappable = 'AUTH_USER_MODEL'
 
+    def save(self, *args, **kwargs):
+        if not self.email:
+            raise ValueError('The given email must be set')
+        if not self.nickname:
+            raise ValueError('The given nickname must be set')
+
+        if(self.avatar):
+            extencion_avatar=self.avatar.name.split('.')[-1]
+            if(not allowed_extencion.__contains__(extencion_avatar)):
+                raise ValueError('The extencion of "avatar" is not supported')
+        super().save(*args,**kwargs)
+
+
     def get_full_name(self):
         full_name = '%s %s' % (self.first_name, self.last_name)
         return full_name.strip()
@@ -84,3 +97,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def email_user(self, subject, message, from_email=None, **kwargs):
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+
+class Subscription(models.Model):
+    subscriber = models.ForeignKey(CustomUser, related_name='subscriber')
+    subscribe_to = models.ForeignKey(CustomUser, related_name='subscribe_to')
+
+    class Meta:
+        unique_together = ('subscriber', 'subscribe_to')

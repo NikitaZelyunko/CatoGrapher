@@ -24,5 +24,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^auth/',include('CatoGrapher_auth.urls')),
     url(r'^CatoGrapher/',include('CatoGrapher.urls')),
+    url(r'^pubs/',include('CatoGrapher_photo.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

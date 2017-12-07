@@ -16,46 +16,66 @@ import json
 def register(request):
     print("hello")
     try:
-        data=json.loads(request.POST['data'])
-        email=data['email']
-        nickname=data['nickname']
-        password=data['password']
+        data = json.loads(request.POST['data'])
+        email = data['email']
+        nickname = data['nickname']
+        password = data['password']
     except MultiValueDictKeyError:
-        return Response({'c':'error', 'd':'bad request'},status=400)
+        return Response({'c': 'error', 'd': 'bad request'}, status=400)
 
     try:
-        avatar=request.FILES['file']
-    except MultiValueDictKeyError :
-        avatar=0
+        avatar = request.FILES['avatar']
+    except MultiValueDictKeyError:
+        avatar = None
+
+    from django.contrib.auth.hashers import make_password
 
     if CustomUser.objects.filter(email__iexact=email).exists():
         return Response({'c': 'error', 'd': 'exist'}, status=400)
-    serializer = CustomUserSerializer(data=data, partial=True)
-    if serializer.is_valid():
-        from django.contrib.auth.hashers import make_password
-        if avatar:
-            try:
-                CustomUser.objects.create_user(email=email, nickname=nickname, password=make_password(password), avatar=avatar)
-            except ValueError as error:
-                return Response({'c':'error','d':error.__str__()},status=400)
-        else:
-            CustomUser.objects.create_user(email=email, nickname=nickname, password=make_password(password))
-        user = CustomUser.objects.get(email=email)
-        print(user)
-        return Response({'status': 'success'}, status=201)
-    else:
-        return Response({'c': 'error', 'd': 'data is not valid'}, status=400)
+    try:
+        CustomUser.objects.create(email=email,
+                                nickname=nickname,
+                                password=make_password(password),
+                                avatar=avatar)
+    except ValueError as error:
+        return Response({'c':'error','d':error.__str__()},status=400)
+
+    return Response({'status': 'success'}, status=201)
+
+    # serializer = CustomUserSerializer(data=data, partial=True)
+    # if serializer.is_valid():
+    #
+    #     if avatar:
+    #         try:
+    #             CustomUser.objects.create_user(email=email,
+    #                                            nickname=nickname,
+    #                                            password=make_password(password),
+    #                                            avatar=avatar)
+    #         except ValueError as error:
+    #             return Response({'c': 'error', 'd': error.__str__()}, status=400)
+    #     else:
+    #         CustomUser.objects.create_user(email=email,
+    #                                        nickname=nickname,
+    #                                        password=make_password(password))
+    #     return Response({'status': 'success'}, status=201)
+    # else:
+    #     return Response({'c': 'error', 'd': 'data is not valid'}, status=400)
 
 
 @api_view(['POST'])
 def login(request):
-    email = request.data['email']
-    password = request.data['password']
+    try:
+        data = request.data
+        email = data['email']
+        password = data['password']
+    except MultiValueDictKeyError:
+        return Response({'c': 'error', 'd': 'bad request'}, status=400)
+
     user = auth.authenticate(email=email, password=password)
-    if(user==None):
+    if (user == None):
         return Response({'error': 'not correct email or password '}, status=401)
     else:
-        if(not Token.objects.filter(user=user)):
+        if (not Token.objects.filter(user=user)):
             Token.objects.create(user=user)
         if user:
             auth.login(request, user)
@@ -66,6 +86,12 @@ def login(request):
             return Response({'c': 'error', 'd': 'inactive'}, status=401)
         else:
             return Response({'c': 'error', 'd': 'not_exist'}, status=401)
+
+@api_view(['GET'])
+def log_out(request):
+    auth.logout(request)
+    Token.objects.filter(key=request.auth).delete()
+    return Response({'logout': 'OK'}, status=200)
 
 
 @api_view(['POST'])
@@ -79,12 +105,23 @@ def edit_user(request):
         return Response(serializer.error_messages, status=200)
     return Response('ERROR', status=400)
 
+@api_view(['GET'])
+def get_user(request):
+    serializer=CustomUserReadSerializer(request.auth.user)
+    return Response(serializer.data,status=200)
+
+
+@api_view(['POST'])
+def subscribe(request):
+    subscribe_to = CustomUser.objects.get(nickname=request.data['nickname'])
+    if Subscription.objects.filter(subscriber=request.auth.user, subscribe_to=subscribe_to).exists():
+        Subscription.objects.get(subscriber=request.auth.user, subscribe_to=subscribe_to).delete()
+    else:
+        Subscription.objects.create(subscriber=request.auth.user, subscribe_to=subscribe_to)
+    return Response({'status': 'success'}, status=200)
 
 @api_view(['GET'])
-def log_out(request):
-    auth.logout(request)
-    Token.objects.filter(key=request.auth).delete()
-    return Response({'logout':'OK'}, status=200)
-
-
-
+def get_subs(request):
+    from .utils import get_subscriptions
+    users = CustomUserReadSerializer(get_subscriptions(request.auth.user), many=True)
+    return Response(users.data, status=200)
