@@ -12,6 +12,8 @@ import { FileModelDirective } from './file-model.directive';
 import { AppRoutingModule } from './/app-routing.module';
 import { RegistrationComponent } from './registration/registration.component';
 
+// Import your AvatarModule
+import { AvatarModule } from 'ngx-avatar';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import { RegistrationComponent } from './registration/registration.component';
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    AvatarModule
   ],
   providers: [
     MainService,

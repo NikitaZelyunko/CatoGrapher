@@ -10,16 +10,20 @@
             <input type="text" placeholder="nickname" name="nickname" [(ngModel)]="form.nickname" #nickname="ngModel" required />
         </div>
         <div class="input_block">
-            <input type="password" placeholder="password" name="password" [(ngModel)]="form.password" #password="ngModel" required/>
+            <input type="password" placeholder="password" name="password" [(ngModel)]="form.password" #password="ngModel" required autocomplete="current-password" minlength="6" maxlength="32" />
         </div>
         <div class="input_block">
-            <input type="file" name="avatar" accept="image/*" (change)="addPhoto($event)" />
+            <input type="file" id="my-input" class="file_input" name="avatar" accept="image/*" (change)="addPhoto($event)">
+            <label for="my-input" class="fake-button">Select file</label>
         </div>
+        <div class="preview_block" *ngIf="img_is_set">
+            <p>preview:</p>
+            <div class="preview_img">
+                <ngx-avatar [src]=img size="100"></ngx-avatar>
+            </div>
+        </div>
+
         <button type="submit">Отправить</button>
+
     </div>
 </form>
-
-<div *ngIf="img_is_set">
-    <p>preview:</p>
-    <img src={{img}} width="200px">
-</div>
