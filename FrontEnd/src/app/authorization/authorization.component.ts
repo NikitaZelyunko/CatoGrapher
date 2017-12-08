@@ -48,6 +48,7 @@ export class AuthorizationComponent implements OnInit {
     }
     return true;
   }
+
   autorization_btn(): void {
     if (this.validate()) {
       const body = {email: this.user.email, password: this.user.password};
@@ -56,7 +57,7 @@ export class AuthorizationComponent implements OnInit {
       this.http.post(this.url, body).subscribe(data => {
         this.token = data;
         console.log(this.token);
-        localStorage.setItem('Token', this.token);
+        localStorage.setItem('Token', this.token['token']);
         window.location.href = this.redirect;
       },
         err => {
