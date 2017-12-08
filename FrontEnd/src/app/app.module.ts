@@ -14,12 +14,16 @@ import { RegistrationComponent } from './registration/registration.component';
 
 // Import your AvatarModule
 import { AvatarModule } from 'ngx-avatar';
+import { AuthorizationComponent } from './authorization/authorization.component';
+import { HomepageComponent } from './homepage/homepage.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FileModelDirective,
-    RegistrationComponent
+    RegistrationComponent,
+    AuthorizationComponent,
+    HomepageComponent
   ],
   imports: [
     BrowserModule,

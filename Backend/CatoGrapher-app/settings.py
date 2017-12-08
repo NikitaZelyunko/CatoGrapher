@@ -116,7 +116,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:4200/'
+    'localhost:4200',
+    '127.0.0.1:4200'
 )
 
 # Internationalization

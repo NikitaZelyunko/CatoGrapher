@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UploadImageService } from '../upload-image.service';
 import { RegisterService } from '../register.service';
+import { Location } from '@angular/common';
 
 const allowed_extension = ['jpg', 'jpeg', 'png', 'ico', 'gif'];
+const redirect = 'http://127.0.0.1:4200/authorization';
 
 @Component({
   selector: 'app-registration',
@@ -20,16 +22,29 @@ export class RegistrationComponent implements OnInit {
 
   constructor(
     private uploadImageService: UploadImageService,
-    private registerService: RegisterService
+    private registerService: RegisterService,
+    private location: Location
   ) {
+
+    const menu = window.document.getElementById('menu');
+    menu.style.display = 'none';
+    const header = window.document.getElementById('header');
+    header.style.display = 'none';
+    const content = window.document.getElementById('content');
+    content.style.width = '100%';
+    content.style.height = '100%';
+    content.style.background = '#fff';
+
+    const container = window.document.getElementById('container');
+    container.style.width = '100%';
+    container.style.height = '100%';
+    container.style.left = '0';
 
   }
   ngOnInit() {
     this.form = {
     };
   }
-
-
 
   addPhoto(event): void {
     let target = event.target || event.srcElement;
@@ -72,6 +87,7 @@ export class RegistrationComponent implements OnInit {
         data => {
           this.data = data;
           console.log(data);
+          window.location.href = redirect;
         },
         err => {
           if (err) {

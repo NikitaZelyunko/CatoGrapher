@@ -1,0 +1,20 @@
+<form novalidate class="contact_form" action="" name="form" #f="ngForm">
+    <ul>
+        <li>
+            <h2>Autorization</h2>
+            <span class="required_notification">* Denotes Required Field</span>
+        </li>
+        <li>
+            <label for="email">Email:</label>
+            <input id="email" type="email" [(ngModel)]="user.email" name="email" placeholder="email address" required />
+        </li>
+        <li>
+            <label for="password">Password:</label>
+            <input id="password" type="password" name="password" [(ngModel)]="user.password" placeholder="input your password" required [(ngModel)]="password" />
+        </li>
+        <li>
+            <button type="submit" class="submit" (click)="autorization_btn()">Войти</button>
+            <button type="submit" class="submit" routerLink="register/">Регистрация</button>
+        </li>
+    </ul>
+</form>

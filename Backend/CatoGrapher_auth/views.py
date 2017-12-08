@@ -14,14 +14,23 @@ import json
 # Create your views here.
 @api_view(['POST'])
 def register(request):
-    print("hello")
+    data=0
     try:
         data = json.loads(request.POST['data'])
         email = data['email']
         nickname = data['nickname']
         password = data['password']
     except MultiValueDictKeyError:
-        return Response({'c': 'error', 'd': 'bad request'}, status=400)
+        pass
+    if(not data):
+        try:
+            print(request.data)
+            data = request.data
+            email = data['email']
+            nickname = data['nickname']
+            password = data['password']
+        except  MultiValueDictKeyError:
+            return Response({'c': 'error', 'd': 'bad request'}, status=400)
 
     try:
         avatar = request.FILES['avatar']

@@ -1,0 +1,85 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* You can add global styles to this file, and also import other style files */
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background: #fff;
+    color: #000000;
+    font-family: Trebuchet MS, Arial, Times New Roman;
+    font-size: 12px;
+}
+
+#container {
+    /*background:#99CC99;*/
+    position: absolute;
+    width: 80%;
+    height: 100%;
+    left: 10%;
+}
+
+#header {
+    background: #fff;
+    height: 10%;
+    width: 100%;
+    vertical-align: top;
+}
+
+.header_elem {
+    height: auto;
+    width: 5%;
+    display: inline-block;
+    font-size: 200%;
+    vertical-align: top;
+    position: absolute;
+    text-align: center;
+}
+
+.headers {
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+span {
+    font-size: 200%;
+    color: black;
+}
+
+#menu {
+    background: #99CC99;
+    float: left;
+    width: 20%;
+    position: absolute;
+    height: 90%;
+}
+
+#content {
+    background: #d2d0d2;
+    float: right;
+    position: relative;
+    width: 80%;
+    height: 90%;
+}
+
+#clear {
+    clear: both;
+}
+
+.header_elem {
+    position: relative;
+    width: inherit;
+}
