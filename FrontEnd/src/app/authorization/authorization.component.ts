@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-authorization',
@@ -16,9 +17,8 @@ export class AuthorizationComponent implements OnInit {
   token: any;
   error: any;
   url = 'http://127.0.0.1:8000/auth/login/';
-  redirect = 'http://127.0.0.1:4200/home';
 
-  constructor(private http: HttpClient, private location: Location) {
+  constructor(private http: HttpClient, private router: Router ) {
     // this.location = location;
     // console.log(this.location);
 
@@ -58,7 +58,7 @@ export class AuthorizationComponent implements OnInit {
         this.token = data;
         console.log(this.token);
         localStorage.setItem('Token', this.token['token']);
-        window.location.href = this.redirect;
+        this.router.navigate(['home']);
       },
         err => {
                   if (err) {
