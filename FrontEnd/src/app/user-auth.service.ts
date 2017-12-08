@@ -69,13 +69,14 @@ export class UserAuthService {
   }
 
   private load_user(): UserModel {
-    let data_user = JSON.parse(localStorage.getItem('CatoGrapherUser'));
     let user = new UserModel();
-    if (user) {
-      user.nickname = data_user.nickname;
-      user.last_name = data_user.last_name;
-      user.first_name = data_user.first_name;
-      user.avatar = data_user.avatar;
+    if (localStorage.getItem('CatoGrapherUser')) {
+      let data_user = JSON.parse(localStorage.getItem('CatoGrapherUser'));
+      
+            user.nickname = data_user.nickname;
+            user.last_name = data_user.last_name;
+            user.first_name = data_user.first_name;
+            user.avatar = data_user.avatar;
     }
     console.log(user);
     return user;
