@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UploadImageService } from '../upload-image.service';
 import { RegisterService } from '../register.service';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 const allowed_extension = ['jpg', 'jpeg', 'png', 'ico', 'gif'];
 const redirect = 'http://127.0.0.1:4200/authorization';
@@ -23,7 +24,8 @@ export class RegistrationComponent implements OnInit {
   constructor(
     private uploadImageService: UploadImageService,
     private registerService: RegisterService,
-    private location: Location
+    private location: Location,
+    private routing: Router
   ) {
 
     const menu = window.document.getElementById('menu');
@@ -87,7 +89,7 @@ export class RegistrationComponent implements OnInit {
         data => {
           this.data = data;
           console.log(data);
-          window.location.href = redirect;
+          this.routing.navigate(['autorization']);
         },
         err => {
           if (err) {
