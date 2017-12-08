@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { UserAuthService } from '../user-auth.service';
 
 @Component({
   selector: 'app-authorization',
@@ -18,17 +19,24 @@ export class AuthorizationComponent implements OnInit {
   error: any;
   url = 'http://127.0.0.1:8000/auth/login/';
 
-  constructor(private http: HttpClient, private router: Router ) {
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private userAuthService: UserAuthService ) {
     // this.location = location;
     // console.log(this.location);
 
   }
 
   ngOnInit() {
+    
+    
     const menu = window.document.getElementById('menu');
     menu.style.display = 'none';
     const header = window.document.getElementById('header');
     header.style.display = 'none';
+
+    
     const content = window.document.getElementById('content');
     content.style.width = '100%';
     content.style.height = '100%';
@@ -52,7 +60,9 @@ export class AuthorizationComponent implements OnInit {
   autorization_btn(): void {
     if (this.validate()) {
       const body = {email: this.user.email, password: this.user.password};
+      this.userAuthService.authUser(this.user.email, this.user.password);
 
+      /*
       const params = new HttpParams();
       this.http.post(this.url, body).subscribe(data => {
         this.token = data;
@@ -67,6 +77,7 @@ export class AuthorizationComponent implements OnInit {
                   }
       });
       console.log('ok', this.token);
+      */
     }
   }
 }

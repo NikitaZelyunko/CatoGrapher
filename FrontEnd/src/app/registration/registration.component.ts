@@ -89,7 +89,7 @@ export class RegistrationComponent implements OnInit {
         data => {
           this.data = data;
           console.log(data);
-          this.routing.navigate(['autorization']);
+          this.routing.navigate(['authorization']);
         },
         err => {
           if (err) {
