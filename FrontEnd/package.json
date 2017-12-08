@@ -21,6 +21,7 @@
     "@angular/platform-browser": "^5.0.0",
     "@angular/platform-browser-dynamic": "^5.0.0",
     "@angular/router": "^5.0.0",
+    "angular-local-storage": "^0.7.1",
     "core-js": "^2.4.1",
     "form-data": "^2.3.1",
     "ng-file-upload": "^12.2.13",

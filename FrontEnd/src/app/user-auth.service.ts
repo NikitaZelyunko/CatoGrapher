@@ -13,7 +13,7 @@ const url_get_user = 'http://127.0.0.1:8000/auth/get-user/';
 @Injectable()
 export class UserAuthService {
 
-  user = new UserModel();
+  user = this.load_user();
 
   constructor(
     private httpClient: HttpClient,
@@ -57,6 +57,7 @@ export class UserAuthService {
         this.user.last_name = data['last_name'];
         this.user.nickname = data['nickname'];
         localStorage.setItem('CatoGrapherUser', JSON.stringify(this.user));
+        console.log(this.user);
       },
       err => this.showErrors(err)
     );
@@ -67,16 +68,17 @@ export class UserAuthService {
     return this.user;
   }
 
-  private load_user(): void {
-    let user = localStorage.getItem('CatoGrapherUser');
-    this.user = new UserModel();
+  private load_user(): UserModel {
+    let data_user = JSON.parse(localStorage.getItem('CatoGrapherUser'));
+    let user = new UserModel();
     if (user) {
-      this.user.nickname = user['nickname'];
-      this.user.last_name = user['last_name'];
-      this.user.first_name = user['first_name'];
-      this.user.avatar = user['avatar'];
+      user.nickname = data_user.nickname;
+      user.last_name = data_user.last_name;
+      user.first_name = data_user.first_name;
+      user.avatar = data_user.avatar;
     }
-    console.log(this.user);
+    console.log(user);
+    return user;
   }
 
 
